@@ -23,12 +23,14 @@ describe('Connector Helper', () => {
 
   it('should throw an InternalFinboticsError on request failure', async () => {
     (axios as unknown as jest.Mock).mockImplementation(() => {
-      throw InternalFinboticsError.setAxiosError({
+      const axiosError = {
         message: 'Internal Server Error',
         config: { method: 'GET', url: 'https://api.example.com/data' },
         isAxiosError: true,
         response: { status: 500, statusText: 'Failed' },
-      } as AxiosError);
+      } as AxiosError;
+      
+      throw InternalFinboticsError.setAxiosError(axiosError);
     });
 
     await expect(
