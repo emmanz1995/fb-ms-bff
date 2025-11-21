@@ -5,10 +5,12 @@ export default async (options: {
   url: string;
   method: string;
   body?: object;
+  token?: string;
 }) => {
   const headerOpts = {
     'content-type': 'application/json',
     Accept: 'application/json',
+    ...(options.token && { Authorization: `Bearer ${options.token}` }),
   };
   let data;
 
@@ -16,7 +18,8 @@ export default async (options: {
     data = (
       await axios({
         url: options.url,
-        method: options.url || 'GET',
+        method: options.method || 'GET',
+        data: options.body || {},
         headers: headerOpts,
       })
     ).data;
@@ -27,4 +30,3 @@ export default async (options: {
 
   return data;
 };
- 

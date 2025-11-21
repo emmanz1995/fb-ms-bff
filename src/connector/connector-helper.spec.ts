@@ -29,7 +29,7 @@ describe('Connector Helper', () => {
         isAxiosError: true,
         response: { status: 500, statusText: 'Failed' },
       } as AxiosError;
-      
+
       throw InternalFinboticsError.setAxiosError(axiosError);
     });
 
