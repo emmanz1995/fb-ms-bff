@@ -46,8 +46,6 @@ describe('Connector Helper', () => {
         method: 'GET',
       });
     } catch (err: any) {
-      console.log('Error caught in test: ', err);
-
       expect(err.message).toEqual('Internal Server Error');
       expect(err.errors).toMatchObject({
         message: 'Internal Server Error',
