@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { connector } from '../connector';
 import { InternalFinboticsError } from '../helpers';
+import { AxiosError } from 'axios';
 
 const authJwt = async (req: Request, res: Response, next: NextFunction) => {
   let token;
@@ -22,12 +23,18 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     req.user = userInfo;
   } catch (err: unknown) {
-    throw new InternalFinboticsError('Unauthorized', {
-      statusCode: 401,
-      metadata: { error: err },
-    });
-  }
+    let finalError: InternalFinboticsError;
+    if ((err as any)?.isAxiosError) {
+      finalError = InternalFinboticsError.setAxiosError(err as AxiosError);
+    } else {
+      finalError = new InternalFinboticsError('Unauthorized', {
+        statusCode: 401,
+        metadata: { error: err },
+      });
+    }
 
+    throw finalError;
+  }
   next();
 };
 

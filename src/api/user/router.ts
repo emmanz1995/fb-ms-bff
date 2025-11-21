@@ -23,14 +23,17 @@ authRouter.post(
 
 authRouter.post(
   '/sign-up',
-  authJwt,
   async (req: Request, res: Response, next: NextFunction) => {
     const user = (req as any).user?.user;
 
+    const resp = await connector({
+      url: `${process.env.AUTH_URL}/api/v1/user/sign-up`,
+      method: 'POST',
+      body: req.body,
+    });
+
     try {
-      res.status(201).json({
-        message: `user: ${user?.username} Onboard route reached successfully`,
-      });
+      res.status(201).json(resp);
     } catch (err: any) {
       next(err);
     }
@@ -38,15 +41,15 @@ authRouter.post(
 );
 
 authRouter.get(
-  '/',
+  '/me',
   authJwt,
   async (req: Request, res: Response, next: NextFunction) => {
     const user = (req as any).user?.user;
+    const url = `${process.env.AUTH_URL}/api/v1/user/${user?.id}`;
+    const response = await connector({ url, method: 'GET' });
 
     try {
-      res.status(200).json({
-        message: `user: ${user?.username} Onboard route reached successfully`,
-      });
+      res.status(200).json(response);
     } catch (err: any) {
       next(err);
     }
