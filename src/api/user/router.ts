@@ -24,8 +24,6 @@ authRouter.post(
 authRouter.post(
   '/sign-up',
   async (req: Request, res: Response, next: NextFunction) => {
-    const user = (req as any).user?.user;
-
     const resp = await connector({
       url: `${process.env.AUTH_URL}/api/v1/user/sign-up`,
       method: 'POST',
